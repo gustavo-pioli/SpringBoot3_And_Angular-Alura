@@ -1,0 +1,64 @@
+package tur.jornada.api.controller;
+
+import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.validation.Valid;
+import tur.jornada.api.medico.DadosAtualizacaoMedico;
+import tur.jornada.api.medico.DadosCadastroMedico;
+import tur.jornada.api.medico.DadosListagemMedico;
+import tur.jornada.api.medico.Medico;
+import tur.jornada.api.medico.MedicoRepository;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+
+
+
+@RestController 
+@RequestMapping("/medicos")
+
+public class MedicoController {
+
+    private final MedicoRepository repository;
+
+    public MedicoController(MedicoRepository repository) {
+        this.repository = repository;
+    }
+
+    @PostMapping 
+    @Transactional  
+    public void Cadastrar(@RequestBody @Valid DadosCadastroMedico dados){
+        repository.save(new Medico(dados));
+    }
+
+    @GetMapping 
+    public Page<DadosListagemMedico> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
+        return repository.findAllByAtivoTrue(paginacao).map(DadosListagemMedico::new);
+    }
+
+    @PutMapping 
+    @Transactional
+    public void atualizar(@RequestBody @Valid DadosAtualizacaoMedico dados){
+        Medico medico = repository.getReferenceById(dados.id());
+        
+        medico.atualizarInformacoes(dados);
+    }
+
+    @DeleteMapping("/{id}") 
+    @Transactional 
+    public void excluir(@PathVariable Long id){
+        Medico medico = repository.getReferenceById(id);
+
+        medico.excluir();
+    }
+}
