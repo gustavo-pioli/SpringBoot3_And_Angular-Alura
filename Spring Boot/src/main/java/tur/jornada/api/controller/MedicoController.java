@@ -3,6 +3,7 @@ package tur.jornada.api.controller;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import tur.jornada.api.domain.medico.DadosAtualizacaoMedico;
 import tur.jornada.api.domain.medico.DadosCadastroMedico;
@@ -30,7 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController 
 @RequestMapping("/medicos")
-
+@SecurityRequirement(name = "bearer-key")
 public class MedicoController {
 
     private final MedicoRepository repository;
