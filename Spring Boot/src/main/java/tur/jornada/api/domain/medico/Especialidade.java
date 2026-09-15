@@ -1,4 +1,4 @@
-package tur.jornada.api.medico;
+package tur.jornada.api.domain.medico;
 
 /**
  * Especialidade

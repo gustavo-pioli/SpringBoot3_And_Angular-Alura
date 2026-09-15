@@ -1,5 +1,6 @@
 package tur.jornada.api.controller;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -11,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
-import tur.jornada.api.paciente.DadosCadastroPaciente;
-import tur.jornada.api.paciente.DadosListagemPaciente;
-import tur.jornada.api.paciente.Paciente;
-import tur.jornada.api.paciente.PacienteRepository;
+import tur.jornada.api.domain.paciente.DadosCadastroPaciente;
+import tur.jornada.api.domain.paciente.DadosListagemPaciente;
+import tur.jornada.api.domain.paciente.Paciente;
+import tur.jornada.api.domain.paciente.PacienteRepository;
 
 @RestController 
 @RequestMapping ("/pacientes")
@@ -33,7 +34,7 @@ public class PacienteController {
     }
 
     @GetMapping 
-    public Page<DadosListagemPaciente> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao){
+    public Page<DadosListagemPaciente> listar(@ParameterObject @PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao){
         return repository.findAll(paginacao).map(DadosListagemPaciente::new);
     }
 }

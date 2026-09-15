@@ -1,4 +1,4 @@
-package tur.jornada.api.endereco;
+package tur.jornada.api.domain.endereco;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;

@@ -1,7 +1,7 @@
-package tur.jornada.api.medico;
+package tur.jornada.api.domain.medico;
 
 import jakarta.validation.constraints.NotNull;
-import tur.jornada.api.endereco.DadosEndereco;
+import tur.jornada.api.domain.endereco.DadosEndereco;
 
 public record DadosAtualizacaoMedico(
 

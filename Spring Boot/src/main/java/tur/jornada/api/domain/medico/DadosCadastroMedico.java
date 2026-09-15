@@ -1,24 +1,24 @@
-package tur.jornada.api.medico;
+package tur.jornada.api.domain.medico;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import tur.jornada.api.endereco.DadosEndereco;
+import tur.jornada.api.domain.endereco.DadosEndereco;
 
 /**
  * DadosCadastroMedico
  */
 public record DadosCadastroMedico(
-    @NotBlank 
+    @NotBlank(message = "{nome.obrigatorio}") //uso de constante em ValidationMessages.properties
     String nome,
     @NotBlank 
     String telefone,
     @NotBlank
     @Email  
     String email,
-    @NotBlank 
+    @NotBlank(message = "CRM é obrigatório") //Exemplo de mensagem personalizada 
     @Pattern(regexp = "\\d{4,6}")
     String crm,
     @NotNull  

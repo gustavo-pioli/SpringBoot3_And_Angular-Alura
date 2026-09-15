@@ -1,11 +1,11 @@
-package tur.jornada.api.paciente;
+package tur.jornada.api.domain.paciente;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import tur.jornada.api.endereco.Endereco;
+import tur.jornada.api.domain.endereco.Endereco;
 
 @Getter 
 @EqualsAndHashCode (of = "id")

@@ -1,8 +1,8 @@
-package tur.jornada.api.paciente;
+package tur.jornada.api.domain.paciente;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import tur.jornada.api.endereco.DadosEndereco;
+import tur.jornada.api.domain.endereco.DadosEndereco;
 
 public record DadosCadastroPaciente(
         @NotBlank String nome,

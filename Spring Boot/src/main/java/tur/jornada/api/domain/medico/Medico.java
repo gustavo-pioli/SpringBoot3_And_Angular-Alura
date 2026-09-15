@@ -1,11 +1,11 @@
-package tur.jornada.api.medico;
+package tur.jornada.api.domain.medico;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import tur.jornada.api.endereco.Endereco;
+import tur.jornada.api.domain.endereco.Endereco;
 
 @Table (name = "medicos")
 @Entity (name = "Medico")

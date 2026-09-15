@@ -1,4 +1,4 @@
-package tur.jornada.api.medico;
+package tur.jornada.api.domain.medico;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
