@@ -1,0 +1,10 @@
+.consulta-cancelamento {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 420px;
+}
+
+.mensagem-erro {
+  color: #b3261e;
+}

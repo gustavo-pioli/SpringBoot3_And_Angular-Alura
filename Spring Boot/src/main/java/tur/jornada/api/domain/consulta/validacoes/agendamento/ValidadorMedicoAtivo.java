@@ -1,14 +1,16 @@
 package tur.jornada.api.domain.consulta.validacoes.agendamento;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import tur.jornada.api.domain.ValidacaoException;
 import tur.jornada.api.domain.consulta.DadosAgendamentoConsulta;
 import tur.jornada.api.domain.medico.MedicoRepository;
 
-@Component 
+@Component
 public class ValidadorMedicoAtivo implements ValidadorAgendamentoDeConsulta{
 
+    @Autowired
     private MedicoRepository repository;
 
     public void validar(DadosAgendamentoConsulta dados){

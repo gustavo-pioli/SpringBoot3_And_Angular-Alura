@@ -1,0 +1,14 @@
+:host {
+  .banner-footer {
+    width: 100%;
+  }
+  h2 {
+    font-size: 24px;
+    font-weight: 500;
+    padding-top: 12px;
+  }
+  .spacer {
+    padding: 16px;
+  }
+
+}

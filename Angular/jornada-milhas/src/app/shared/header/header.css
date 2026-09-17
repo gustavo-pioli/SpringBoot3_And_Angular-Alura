@@ -1,0 +1,30 @@
+.app-header {
+
+  img {
+    height: 40px;
+    width: auto;
+  }
+
+  button {
+    margin: 0 16px;
+    color: white;
+  }
+
+  button[matButton="elevated"]{
+    color: black;
+  }
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+
+  .mat-toolbar {
+    background-color: black;
+    color: white;
+    padding: 0 256px;
+  }
+
+  .mat-mdc-outlined-button:not(:disabled) {
+    border-color: white;
+  }
+}

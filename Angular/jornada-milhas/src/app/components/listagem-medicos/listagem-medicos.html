@@ -1,0 +1,11 @@
+<section>
+  <div>
+    <button matButton="filled" (click)="buscar()">Buscar</button>
+  </div>
+  <div class="card-wrapper">
+    @for (medico of medicos(); track medico.id) {
+      <app-card-busca [medicos]="medico" />
+    }
+  </div>
+</section>
+

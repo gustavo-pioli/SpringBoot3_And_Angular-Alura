@@ -1,0 +1,67 @@
+.modal {
+  padding: 32px;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  h1 {
+    font-size: 32px;
+    padding: 0px;
+  }
+  h2 {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .conteudo{
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .selecao-idade {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    ul {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      list-style-type: none;
+      margin: 6px 0;
+      padding: 0;
+      li {
+        margin-bottom: 10px;
+        margin: 8px;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 20px;
+        color: #1D1B20;
+        text-align: start;
+        padding: 0;
+        span {
+          vertical-align: middle;
+          padding: 0 12px;
+        }
+      }
+      .li-image{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+  }
+  .selecao-categoria {
+    padding: 0 12px;
+    color: #1D1B20;
+    h2 {
+        margin-bottom: 8px;
+    }
+  }
+  .modal-actions {
+    display: flex;
+    justify-content: center;
+    button {
+      margin: 0 8px;
+      flex: 1 1 auto;
+    }
+  }
+}

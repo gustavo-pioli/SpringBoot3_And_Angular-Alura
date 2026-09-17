@@ -3,6 +3,8 @@ package tur.jornada.api.domain.consulta;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import tur.jornada.api.domain.ValidacaoException;
@@ -76,5 +78,10 @@ public class AgendaDeConsultas {
 
         var consulta = consultaRepository.getReferenceById(dados.idConsulta());
         consulta.cancelar(dados.motivo());        
+    }
+
+    public Page<DadosDetalhamentoConsulta> listar(Pageable paginacao){
+        Page<DadosDetalhamentoConsulta> page = consultaRepository.findAll(paginacao).map(DadosDetalhamentoConsulta::new);
+        return page;
     }
 }

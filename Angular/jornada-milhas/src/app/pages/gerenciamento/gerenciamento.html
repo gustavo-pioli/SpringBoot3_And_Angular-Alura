@@ -1,0 +1,27 @@
+<app-container>
+  <h1>Gerenciamento</h1>
+
+  <!-- mat-tab-group: uma página só, três abas, em vez de três rotas. Cada aba
+       "empurra" toda a lógica de um recurso pro seu próprio componente
+       (mesma ideia de <app-listagem-medicos> na Home) — os três seguem o
+       mesmo padrão: tabela com paginação + botão que abre um diálogo. -->
+  <mat-tab-group>
+    <mat-tab label="Médicos">
+      <div class="tab-conteudo">
+        <app-medico-tabela></app-medico-tabela>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Pacientes">
+      <div class="tab-conteudo">
+        <app-paciente-tabela></app-paciente-tabela>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Consultas">
+      <div class="tab-conteudo">
+        <app-consulta-tabela></app-consulta-tabela>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</app-container>

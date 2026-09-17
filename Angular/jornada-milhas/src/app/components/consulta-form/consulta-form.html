@@ -1,0 +1,57 @@
+<h2 mat-dialog-title>Agendar consulta</h2>
+
+<div mat-dialog-content>
+  <form [formGroup]="form" (ngSubmit)="agendar()" class="consulta-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Paciente</mat-label>
+      <mat-select formControlName="idPaciente">
+        @for (paciente of pacientesDisponiveis(); track paciente.id) {
+          <mat-option [value]="paciente.id">{{ paciente.nome }} ({{ paciente.cpf }})</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Data e hora</mat-label>
+      <!-- Material não tem um widget pronto de data+hora; um input HTML nativo
+           "datetime-local" resolve e ainda funciona dentro de um mat-form-field. -->
+      <input matInput type="datetime-local" formControlName="data" />
+    </mat-form-field>
+
+    <!-- A regra de negócio do backend: OU se escolhe um médico específico, OU se
+         escolhe a especialidade e a API sorteia um médico disponível. -->
+    <mat-radio-group formControlName="escolha" class="consulta-form__escolha">
+      <mat-radio-button value="especialidade">Escolher por especialidade</mat-radio-button>
+      <mat-radio-button value="medico">Escolher médico específico</mat-radio-button>
+    </mat-radio-group>
+
+    @if (escolha() === 'especialidade') {
+      <mat-form-field appearance="outline">
+        <mat-label>Especialidade</mat-label>
+        <mat-select formControlName="especialidade">
+          @for (esp of especialidades; track esp) {
+            <mat-option [value]="esp">{{ esp }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    } @else {
+      <mat-form-field appearance="outline">
+        <mat-label>Médico</mat-label>
+        <mat-select formControlName="idMedico">
+          @for (medico of medicosDisponiveis(); track medico.id) {
+            <mat-option [value]="medico.id">{{ medico.nome }} ({{ medico.crm }})</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+
+    @if (erro) {
+      <p class="mensagem-erro">{{ erro }}</p>
+    }
+
+    <div mat-dialog-actions>
+      <button matButton mat-dialog-close>Cancelar</button>
+      <button matButton="filled" type="submit">Agendar</button>
+    </div>
+  </form>
+</div>

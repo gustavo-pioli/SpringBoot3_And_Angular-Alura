@@ -1,0 +1,9 @@
+.consulta-tabela {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+table {
+  width: 100%;
+}

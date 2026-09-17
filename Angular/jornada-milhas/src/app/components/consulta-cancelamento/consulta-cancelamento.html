@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>Cancelar consulta nº {{ data.idConsulta }}</h2>
+
+<div mat-dialog-content>
+  <form [formGroup]="form" (ngSubmit)="cancelar()" class="consulta-cancelamento">
+    <mat-form-field appearance="outline">
+      <mat-label>Motivo</mat-label>
+      <mat-select formControlName="motivo">
+        @for (motivo of motivos; track motivo) {
+          <mat-option [value]="motivo">{{ motivo }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    @if (erro) {
+      <p class="mensagem-erro">{{ erro }}</p>
+    }
+
+    <div mat-dialog-actions>
+      <button matButton mat-dialog-close>Voltar</button>
+      <button matButton="filled" type="submit">Cancelar consulta</button>
+    </div>
+  </form>
+</div>

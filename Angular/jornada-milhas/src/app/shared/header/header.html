@@ -1,0 +1,14 @@
+<header class="app-header">
+    <mat-toolbar>
+      <img src="images/logo.png" alt="Logo da aplicação Jornada Milhas"/>
+      <span class="spacer"></span>
+      <button matButton>Vender Milhas</button>
+      <button matButton>Sobre</button>
+      <!-- Só aparece autenticado: a rota já é protegida pelo authGuard, mas
+           não faz sentido nem mostrar o link pra quem não pode entrar. -->
+      @if (auth.authenticated()) {
+        <button matButton routerLink="/gerenciamento">Gerenciamento</button>
+      }
+      <button matButton="elevated" (click)="entrarOuSair()">{{ auth.authenticated() ? 'Logout' : 'Login'}}</button>
+    </mat-toolbar>    
+</header>

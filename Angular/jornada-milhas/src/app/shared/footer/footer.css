@@ -1,0 +1,32 @@
+.app-footer {
+  background-color: black;
+  color: white;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  padding: 20px 256px;
+  .inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    img {
+      max-width: 100%;
+      max-height: 40px;
+    }
+    ul {
+      padding: 0;
+      list-style: none;
+      &.socials {
+        li {
+          display: flex;
+          justify-content: center;
+          gap: 8px;
+          text-align: center;
+        }
+      }
+      li:first-child {
+        margin-bottom: 12px;
+      }
+    }
+  }
+}

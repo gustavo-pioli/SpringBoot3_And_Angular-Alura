@@ -1,0 +1,22 @@
+<section class="modal">
+    <div mat-dialog-content class="conteudo">
+        <form [formGroup]="form" (ngSubmit)="entrar()">
+            <mat-form-field appearance="outline">
+                <mat-label>Email</mat-label>
+                <input matInput type="email" formControlName="login"/>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Senha</mat-label>
+                <input matInput type="password" formControlName="senha"/>
+            </mat-form-field>
+            @if (errorMessage) {
+                <p class="mensagem-erro">{{ errorMessage }}</p>
+            }
+            <div mat-dialog-actions class="modal-actions">
+                <button matButton mat-dialog-close>Cancelar</button>
+                <button matButton="filled" type="submit">Login</button>
+            </div>
+        </form>
+    </div>
+    
+</section>
