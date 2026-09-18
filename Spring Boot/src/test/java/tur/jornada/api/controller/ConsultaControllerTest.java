@@ -62,7 +62,7 @@ public class ConsultaControllerTest {
         var data = LocalDateTime.now().plusHours(1);
         var especialidade = Especialidade.CARDIOLOGIA;
 
-        var dadosDetalhamento = new DadosDetalhamentoConsulta(null, 2l, 5l, data);
+        var dadosDetalhamento = new DadosDetalhamentoConsulta(null, 2l, "Medico Teste", 5l, "Paciente Teste", data);
         when(agendaDeConsultas.agendar(any())).thenReturn(dadosDetalhamento);
 
         var response = mvc
@@ -77,7 +77,7 @@ public class ConsultaControllerTest {
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
         var jsonEsperado = dadosDetalhamentoConsultaJson.write(
-                new DadosDetalhamentoConsulta(null, 2l, 5l, data))
+                new DadosDetalhamentoConsulta(null, 2l, "Medico Teste", 5l, "Paciente Teste", data))
                 .getJson();
 
         assertThat(response.getContentAsString()).isEqualTo(jsonEsperado);

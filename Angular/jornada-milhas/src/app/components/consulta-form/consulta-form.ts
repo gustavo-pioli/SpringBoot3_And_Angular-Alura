@@ -54,6 +54,7 @@ export class ConsultaForm implements OnInit {
     idMedico: [null as number | null],
     especialidade: ['' as Especialidade | ''],
     data: ['', Validators.required],
+    hora: ['', Validators.required],
   });
 
   // Lido diretamente do FormControl, o template acabava vendo o valor mudar
@@ -95,7 +96,7 @@ export class ConsultaForm implements OnInit {
 
     const dados: DadosAgendamentoConsulta = {
       idPaciente: v.idPaciente!,
-      data: v.data,
+      data: v.data +"T"+ v.hora,
       ...(v.escolha === 'medico' ? { idMedico: v.idMedico! } : { especialidade: v.especialidade as Especialidade }),
     };
 

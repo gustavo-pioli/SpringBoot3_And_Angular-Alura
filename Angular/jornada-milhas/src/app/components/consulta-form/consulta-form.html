@@ -12,10 +12,14 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Data e hora</mat-label>
+      <mat-label>Data</mat-label>
       <!-- Material não tem um widget pronto de data+hora; um input HTML nativo
            "datetime-local" resolve e ainda funciona dentro de um mat-form-field. -->
-      <input matInput type="datetime-local" formControlName="data" />
+      <input matInput type="date" formControlName="data" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Horário</mat-label>
+      <input matInput type="time" formControlName="hora" />
     </mat-form-field>
 
     <!-- A regra de negócio do backend: OU se escolhe um médico específico, OU se

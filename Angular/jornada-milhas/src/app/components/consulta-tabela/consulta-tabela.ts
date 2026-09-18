@@ -1,13 +1,14 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { Consultas } from '../../services/consultas';
-import { DadosDetalhamentoConsulta } from '../../../types/type';
 import { ConsultaForm } from '../consulta-form/consulta-form';
 import { ConsultaCancelamento } from '../consulta-cancelamento/consulta-cancelamento';
+import { criarTabelaPaginada } from '../../utils/tabela-paginada';
+import { abrirEAtualizar } from '../../utils/dialog-e-atualizar';
 
 @Component({
   selector: 'app-consulta-tabela',
@@ -19,49 +20,28 @@ export class ConsultaTabela implements OnInit {
   private readonly service = inject(Consultas);
   private readonly dialog = inject(MatDialog);
 
-  readonly colunas = ['id', 'idPaciente', 'idMedico', 'data', 'acoes'];
+  readonly colunas = ['id', 'Paciente', 'Medico', 'data', 'acoes'];
 
-  consultas = signal<DadosDetalhamentoConsulta[]>([]);
-  totalElementos = signal(0);
-  pagina = signal(0);
-  tamanhoPagina = signal(5);
+  private readonly tabela = criarTabelaPaginada((pagina, tamanho) => this.service.listar(pagina, tamanho));
+  readonly consultas = this.tabela.itens;
+  readonly totalElementos = this.tabela.totalElementos;
+  readonly pagina = this.tabela.pagina;
+  readonly tamanhoPagina = this.tabela.tamanhoPagina;
+  readonly erro = this.tabela.erro;
 
   ngOnInit(): void {
-    this.buscar();
-  }
-
-  buscar(): void {
-    this.service.listar(this.pagina(), this.tamanhoPagina()).subscribe((res) => {
-      this.consultas.set(res.content);
-      this.totalElementos.set(res.totalElements);
-    });
+    this.tabela.buscar();
   }
 
   paginar(evento: PageEvent): void {
-    this.pagina.set(evento.pageIndex);
-    this.tamanhoPagina.set(evento.pageSize);
-    this.buscar();
+    this.tabela.paginar(evento);
   }
 
   agendar(): void {
-    this.dialog
-      .open(ConsultaForm)
-      .afterClosed()
-      .subscribe((agendou) => {
-        if (agendou) {
-          this.buscar();
-        }
-      });
+    abrirEAtualizar(this.dialog, ConsultaForm, () => this.tabela.buscar());
   }
 
   cancelar(idConsulta: number): void {
-    this.dialog
-      .open(ConsultaCancelamento, { data: { idConsulta } })
-      .afterClosed()
-      .subscribe((cancelou) => {
-        if (cancelou) {
-          this.buscar();
-        }
-      });
+    abrirEAtualizar(this.dialog, ConsultaCancelamento, () => this.tabela.buscar(), { data: { idConsulta } });
   }
 }

@@ -1,11 +1,12 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { Pacientes } from '../../services/pacientes';
-import { DadosListagemPaciente } from '../../../types/type';
 import { PacienteForm } from '../paciente-form/paciente-form';
+import { criarTabelaPaginada } from '../../utils/tabela-paginada';
+import { abrirEAtualizar } from '../../utils/dialog-e-atualizar';
 
 @Component({
   selector: 'app-paciente-tabela',
@@ -20,36 +21,22 @@ export class PacienteTabela implements OnInit {
   // Sem coluna de ações: a API não expõe edição nem exclusão de paciente.
   readonly colunas = ['nome', 'email', 'cpf'];
 
-  pacientes = signal<DadosListagemPaciente[]>([]);
-  totalElementos = signal(0);
-  pagina = signal(0);
-  tamanhoPagina = signal(5);
+  private readonly tabela = criarTabelaPaginada((pagina, tamanho) => this.service.listar(pagina, tamanho));
+  readonly pacientes = this.tabela.itens;
+  readonly totalElementos = this.tabela.totalElementos;
+  readonly pagina = this.tabela.pagina;
+  readonly tamanhoPagina = this.tabela.tamanhoPagina;
+  readonly erro = this.tabela.erro;
 
   ngOnInit(): void {
-    this.buscar();
-  }
-
-  buscar(): void {
-    this.service.listar(this.pagina(), this.tamanhoPagina()).subscribe((res) => {
-      this.pacientes.set(res.content);
-      this.totalElementos.set(res.totalElements);
-    });
+    this.tabela.buscar();
   }
 
   paginar(evento: PageEvent): void {
-    this.pagina.set(evento.pageIndex);
-    this.tamanhoPagina.set(evento.pageSize);
-    this.buscar();
+    this.tabela.paginar(evento);
   }
 
   cadastrar(): void {
-    this.dialog
-      .open(PacienteForm)
-      .afterClosed()
-      .subscribe((cadastrou) => {
-        if (cadastrou) {
-          this.buscar();
-        }
-      });
+    abrirEAtualizar(this.dialog, PacienteForm, () => this.tabela.buscar());
   }
 }

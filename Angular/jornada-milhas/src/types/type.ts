@@ -116,7 +116,9 @@ export interface DadosCancelamentoConsulta {
 export interface DadosDetalhamentoConsulta {
   id: number;
   idMedico: number;
+  nomeMedico: string;
   idPaciente: number;
+  nomePaciente: string;
   data: string;
 }
 

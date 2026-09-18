@@ -1,12 +1,13 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { Medicos } from '../../services/medicos';
-import { DadosListagemMedico } from '../../../types/type';
 import { MedicoForm } from '../medico-form/medico-form';
+import { criarTabelaPaginada } from '../../utils/tabela-paginada';
+import { abrirEAtualizar } from '../../utils/dialog-e-atualizar';
 
 @Component({
   selector: 'app-medico-tabela',
@@ -21,53 +22,30 @@ export class MedicoTabela implements OnInit {
   // Colunas exibidas pelo mat-table: precisa bater com os matColumnDef do template.
   readonly colunas = ['nome', 'email', 'crm', 'especialidade', 'acoes'];
 
-  medicos = signal<DadosListagemMedico[]>([]);
-  totalElementos = signal(0);
-  pagina = signal(0);
-  tamanhoPagina = signal(5);
+  private readonly tabela = criarTabelaPaginada((pagina, tamanho) => this.service.listar(pagina, tamanho));
+  readonly medicos = this.tabela.itens;
+  readonly totalElementos = this.tabela.totalElementos;
+  readonly pagina = this.tabela.pagina;
+  readonly tamanhoPagina = this.tabela.tamanhoPagina;
+  readonly erro = this.tabela.erro;
 
   ngOnInit(): void {
-    this.buscar();
+    this.tabela.buscar();
   }
 
-  buscar(): void {
-    this.service.listar(this.pagina(), this.tamanhoPagina()).subscribe((res) => {
-      this.medicos.set(res.content);
-      this.totalElementos.set(res.totalElements);
-    });
-  }
-
-  // O mat-paginator já resolve a UI de página/tamanho; só repassamos os valores
-  // ao serviço e buscamos de novo.
   paginar(evento: PageEvent): void {
-    this.pagina.set(evento.pageIndex);
-    this.tamanhoPagina.set(evento.pageSize);
-    this.buscar();
+    this.tabela.paginar(evento);
   }
 
   cadastrar(): void {
-    this.dialog
-      .open(MedicoForm)
-      .afterClosed()
-      .subscribe((atualizou) => {
-        if (atualizou) {
-          this.buscar();
-        }
-      });
+    abrirEAtualizar(this.dialog, MedicoForm, () => this.tabela.buscar());
   }
 
   editar(id: number): void {
     // Busca o detalhamento completo (a listagem não traz telefone/endereço)
     // antes de abrir o formulário de edição.
     this.service.detalhar(id).subscribe((medico) => {
-      this.dialog
-        .open(MedicoForm, { data: { medico } })
-        .afterClosed()
-        .subscribe((atualizou) => {
-          if (atualizou) {
-            this.buscar();
-          }
-        });
+      abrirEAtualizar(this.dialog, MedicoForm, () => this.tabela.buscar(), { data: { medico } });
     });
   }
 
@@ -76,6 +54,6 @@ export class MedicoTabela implements OnInit {
       return;
     }
 
-    this.service.excluir(id).subscribe(() => this.buscar());
+    this.service.excluir(id).subscribe(() => this.tabela.buscar());
   }
 }
