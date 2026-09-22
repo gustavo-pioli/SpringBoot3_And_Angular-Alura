@@ -19,7 +19,6 @@ export interface Page<T> {
   last: boolean;
 }
 
-
 export interface DadosAutenticacao{
   login: string;
   senha: string;
@@ -32,6 +31,14 @@ export interface DadosTokenJWT {
 
 export interface DadosRefreshToken {
   refreshToken: string;
+}
+
+export interface DadosCep {
+  cep: string;
+  logradouro: string;
+  localidade: string;
+  uf: string;
+  erro: boolean;
 }
 
 // --- Endereço: usado por médico e paciente. Dois tipos porque o backend também

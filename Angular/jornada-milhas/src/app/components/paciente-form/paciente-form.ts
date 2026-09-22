@@ -7,6 +7,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Pacientes } from '../../services/pacientes';
 import { extrairMensagemErro } from '../../utils/erro-http';
+import { catchError, distinctUntilChanged, EMPTY, filter, map, switchMap } from 'rxjs';
+import { Cep } from '../../services/cep';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 // Diferente de médico, a API de paciente só tem cadastro (POST) — não há
 // edição, então este diálogo não precisa de um "modo edição" como o de médico.
@@ -20,8 +23,10 @@ export class PacienteForm {
   private readonly service = inject(Pacientes);
   private readonly dialogRef = inject(MatDialogRef<PacienteForm>);
   private readonly fb = inject(FormBuilder);
+  private readonly cepService = inject(Cep);
 
   erro = '';
+  tentouSalvar = false;
 
   form = this.fb.nonNullable.group({
     nome: ['', Validators.required],
@@ -37,7 +42,27 @@ export class PacienteForm {
     complemento: [''],
   });
 
+  constructor() {
+    this.form.controls.cep.valueChanges.pipe(
+      map(cep => cep?.replace(/\D/g, '') ?? ''),
+      filter(cep => cep.length === 8),
+      distinctUntilChanged(),
+      switchMap(cep => this.cepService.buscar(cep).pipe(
+        catchError(() => EMPTY)
+      )),
+      takeUntilDestroyed(),
+    ).subscribe(dados => {
+      this.form.patchValue({
+        logradouro: dados.logradouro,
+        cidade: dados.localidade,
+        uf: dados.uf,
+      });
+    });
+  }
+
   salvar(): void {
+    this.tentouSalvar = true;
+
     if (this.form.invalid) {
       return;
     }

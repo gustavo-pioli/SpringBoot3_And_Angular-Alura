@@ -9,6 +9,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Medicos } from '../../services/medicos';
 import { DadosDetalhamentoMedico, Especialidade } from '../../../types/type';
 import { extrairMensagemErro } from '../../utils/erro-http';
+import { catchError, distinctUntilChanged, EMPTY, filter, map, switchMap } from 'rxjs';
+import { Cep } from '../../services/cep';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 // Dado injetado no diálogo (MAT_DIALOG_DATA): se vier um médico, o formulário
 // abre em modo edição (PUT); se vier vazio/undefined, abre em modo cadastro (POST).
@@ -35,11 +38,13 @@ export class MedicoForm {
   private readonly dialogRef = inject(MatDialogRef<MedicoForm>);
   private readonly fb = inject(FormBuilder);
   private readonly data = inject<MedicoFormData>(MAT_DIALOG_DATA, { optional: true });
+  private readonly cepService = inject(Cep);
 
   readonly especialidades: Especialidade[] = ['ORTOPEDIA', 'GINECOLOGIA', 'CARDIOLOGIA', 'DERMATOLOGIA'];
   readonly medico = this.data?.medico;
   readonly emEdicao = !!this.medico;
   erro = '';
+  tentouSalvar = false;
 
   form = this.fb.nonNullable.group({
     nome: [this.medico?.nome ?? '', Validators.required],
@@ -64,9 +69,26 @@ export class MedicoForm {
       this.form.controls.crm.disable();
       this.form.controls.especialidade.disable();
     }
+
+    this.form.controls.cep.valueChanges.pipe(
+      map(cep => cep?.replace(/\D/g, '') ?? ''),
+      filter(cep => cep.length === 8),
+      distinctUntilChanged(),
+      switchMap(cep => this.cepService.buscar(cep).pipe(
+        catchError(() => EMPTY)
+      )),
+      takeUntilDestroyed(),
+    ).subscribe(dados => {
+      this.form.patchValue({
+        logradouro: dados.logradouro,
+        cidade: dados.localidade,
+        uf: dados.uf,
+      });
+    });
   }
 
   salvar(): void {
+    this.tentouSalvar = true;
     if (this.form.invalid) {
       return;
     }
