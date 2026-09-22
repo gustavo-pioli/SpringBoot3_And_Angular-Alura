@@ -27,6 +27,11 @@ export interface DadosAutenticacao{
 
 export interface DadosTokenJWT {
   token: string;
+  refreshToken: string;
+}
+
+export interface DadosRefreshToken {
+  refreshToken: string;
 }
 
 // --- Endereço: usado por médico e paciente. Dois tipos porque o backend também
