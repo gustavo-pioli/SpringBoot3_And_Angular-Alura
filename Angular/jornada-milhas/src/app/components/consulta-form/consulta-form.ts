@@ -47,6 +47,7 @@ export class ConsultaForm implements OnInit {
   medicosDisponiveis = signal<DadosListagemMedico[]>([]);
   pacientesDisponiveis = signal<DadosListagemPaciente[]>([]);
   erro = '';
+  salvando = signal(false);
 
   form = this.fb.nonNullable.group({
     idPaciente: [null as number | null, Validators.required],
@@ -100,9 +101,13 @@ export class ConsultaForm implements OnInit {
       ...(v.escolha === 'medico' ? { idMedico: v.idMedico! } : { especialidade: v.especialidade as Especialidade }),
     };
 
+    this.salvando.set(true);
     this.service.agendar(dados).subscribe({
       next: () => this.dialogRef.close(true),
-      error: (e: HttpErrorResponse) => (this.erro = extrairMensagemErro(e)),
+      error: (e: HttpErrorResponse) => {
+        this.erro = extrairMensagemErro(e);
+        this.salvando.set(false);
+      },
     });
   }
 }

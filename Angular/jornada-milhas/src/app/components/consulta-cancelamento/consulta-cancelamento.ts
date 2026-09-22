@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -29,6 +29,7 @@ export class ConsultaCancelamento {
 
   readonly motivos: MotivoCancelamento[] = ['PACIENTE_DESISTIU', 'MEDICO_CANCELOU', 'OUTROS'];
   erro = '';
+  salvando = signal(false);
 
   form = this.fb.nonNullable.group({
     motivo: ['' as MotivoCancelamento, Validators.required],
@@ -39,9 +40,13 @@ export class ConsultaCancelamento {
       return;
     }
 
+    this.salvando.set(true);
     this.service.cancelar({ idConsulta: this.data.idConsulta, motivo: this.form.getRawValue().motivo }).subscribe({
       next: () => this.dialogRef.close(true),
-      error: (e: HttpErrorResponse) => (this.erro = extrairMensagemErro(e)),
+      error: (e: HttpErrorResponse) => {
+        this.erro = extrairMensagemErro(e);
+        this.salvando.set(false);
+      },
     });
   }
 }

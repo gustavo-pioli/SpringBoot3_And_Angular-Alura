@@ -1,7 +1,9 @@
 <div class="consulta-tabela">
   <button matButton="filled" (click)="agendar()">Agendar consulta</button>
 
-  @if (erro()) {
+  @if (carregando()){
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }@else if (erro()) {
     <p class="mensagem-erro">{{ erro() }}</p>
   } @else if (consultas().length === 0) {
     <p>Nenhuma consulta encontrada.</p>

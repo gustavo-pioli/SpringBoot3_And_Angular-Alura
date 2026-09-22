@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -45,6 +45,7 @@ export class MedicoForm {
   readonly emEdicao = !!this.medico;
   erro = '';
   tentouSalvar = false;
+  salvando = signal(false);
 
   form = this.fb.nonNullable.group({
     nome: [this.medico?.nome ?? '', Validators.required],
@@ -115,11 +116,16 @@ export class MedicoForm {
           endereco,
         });
 
+    this.salvando.set(true);
     requisicao.subscribe({
       // Fecha o diálogo devolvendo `true`: quem abriu usa esse retorno pra saber
-      // que precisa recarregar a listagem.
+      // que precisa recarregar a listagem. Não precisa `salvando.set(false)`
+      // aqui — o diálogo fecha e o componente é destruído.
       next: () => this.dialogRef.close(true),
-      error: (e: HttpErrorResponse) => (this.erro = extrairMensagemErro(e)),
+      error: (e: HttpErrorResponse) => {
+        this.erro = extrairMensagemErro(e);
+        this.salvando.set(false);
+      },
     });
   }
 }

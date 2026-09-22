@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -27,6 +27,7 @@ export class PacienteForm {
 
   erro = '';
   tentouSalvar = false;
+  salvando = signal(false);
 
   form = this.fb.nonNullable.group({
     nome: ['', Validators.required],
@@ -69,25 +70,29 @@ export class PacienteForm {
 
     const v = this.form.getRawValue();
 
-    this.service
-      .cadastrar({
-        nome: v.nome,
-        email: v.email,
-        telefone: v.telefone,
-        cpf: v.cpf,
-        endereco: {
-          logradouro: v.logradouro,
-          bairro: v.bairro,
-          cep: v.cep,
-          cidade: v.cidade,
-          uf: v.uf,
-          numero: v.numero,
-          complemento: v.complemento,
-        },
-      })
-      .subscribe({
-        next: () => this.dialogRef.close(true),
-        error: (e: HttpErrorResponse) => (this.erro = extrairMensagemErro(e)),
-      });
+    const requisicao = this.service.cadastrar({
+      nome: v.nome,
+      email: v.email,
+      telefone: v.telefone,
+      cpf: v.cpf,
+      endereco: {
+        logradouro: v.logradouro,
+        bairro: v.bairro,
+        cep: v.cep,
+        cidade: v.cidade,
+        uf: v.uf,
+        numero: v.numero,
+        complemento: v.complemento,
+      },
+    });
+
+    this.salvando.set(true);
+    requisicao.subscribe({
+      next: () => this.dialogRef.close(true),
+      error: (e: HttpErrorResponse) => {
+        this.erro = extrairMensagemErro(e);
+        this.salvando.set(false);
+      },
+    });
   }
 }

@@ -1,7 +1,9 @@
 <div class="paciente-tabela">
   <button matButton="filled" (click)="cadastrar()">Novo paciente</button>
 
-  @if (erro()) {
+  @if (carregando()){
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }@else if (erro()) {
     <p class="mensagem-erro">{{ erro() }}</p>
   } @else if (pacientes().length === 0) {
     <p>Nenhum paciente encontrado.</p>

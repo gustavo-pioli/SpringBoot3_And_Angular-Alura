@@ -16,8 +16,10 @@
     }
 
     <div mat-dialog-actions>
-      <button matButton mat-dialog-close>Voltar</button>
-      <button matButton="filled" type="submit">Cancelar consulta</button>
+      <button matButton mat-dialog-close [disabled]="salvando()">Voltar</button>
+      <button matButton="filled" type="submit" [disabled]="salvando()">
+        {{ salvando() ? 'Cancelando...' : 'Cancelar consulta' }}
+      </button>
     </div>
   </form>
 </div>

@@ -9,16 +9,20 @@ import { ConsultaForm } from '../consulta-form/consulta-form';
 import { ConsultaCancelamento } from '../consulta-cancelamento/consulta-cancelamento';
 import { criarTabelaPaginada } from '../../utils/tabela-paginada';
 import { abrirEAtualizar } from '../../utils/dialog-e-atualizar';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-consulta-tabela',
-  imports: [MatTableModule, MatPaginatorModule, MatButtonModule, MatIconModule],
+  imports: [MatTableModule, MatPaginatorModule, MatButtonModule, MatIconModule, MatProgressBarModule],
   templateUrl: './consulta-tabela.html',
   styleUrl: './consulta-tabela.css',
 })
 export class ConsultaTabela implements OnInit {
   private readonly service = inject(Consultas);
   private readonly dialog = inject(MatDialog);
+  private readonly snackBar = inject(MatSnackBar);
+
 
   readonly colunas = ['id', 'Paciente', 'Medico', 'data', 'acoes'];
 
@@ -28,6 +32,8 @@ export class ConsultaTabela implements OnInit {
   readonly pagina = this.tabela.pagina;
   readonly tamanhoPagina = this.tabela.tamanhoPagina;
   readonly erro = this.tabela.erro;
+  readonly carregando = this.tabela.carregando;
+
 
   ngOnInit(): void {
     this.tabela.buscar();
@@ -38,10 +44,10 @@ export class ConsultaTabela implements OnInit {
   }
 
   agendar(): void {
-    abrirEAtualizar(this.dialog, ConsultaForm, () => this.tabela.buscar());
+    abrirEAtualizar(this.dialog, this.snackBar, ConsultaForm, () => this.tabela.buscar(), "Consulta cadastrada com sucesso");
   }
 
   cancelar(idConsulta: number): void {
-    abrirEAtualizar(this.dialog, ConsultaCancelamento, () => this.tabela.buscar(), { data: { idConsulta } });
+    abrirEAtualizar(this.dialog, this.snackBar, ConsultaCancelamento, () => this.tabela.buscar(), "Cadastro cancelado", { data: { idConsulta } });
   }
 }

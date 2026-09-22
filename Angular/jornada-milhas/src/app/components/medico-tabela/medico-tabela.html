@@ -5,7 +5,9 @@
        caso de sucesso mas sem nenhum registro. O paginator fica fora desse
        @if pra continuar acessível mesmo se a página atual falhar — assim dá
        pra voltar pra uma página que funcionava, sem precisar recarregar tudo. -->
-  @if (erro()) {
+  @if (carregando()){
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }@else if (erro()) {
     <p class="mensagem-erro">{{ erro() }}</p>
   } @else if (medicos().length === 0) {
     <p>Nenhum médico encontrado.</p>

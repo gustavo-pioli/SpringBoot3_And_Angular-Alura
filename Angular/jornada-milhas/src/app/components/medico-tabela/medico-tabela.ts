@@ -8,16 +8,20 @@ import { Medicos } from '../../services/medicos';
 import { MedicoForm } from '../medico-form/medico-form';
 import { criarTabelaPaginada } from '../../utils/tabela-paginada';
 import { abrirEAtualizar } from '../../utils/dialog-e-atualizar';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-medico-tabela',
-  imports: [MatTableModule, MatPaginatorModule, MatButtonModule, MatIconModule],
+  imports: [MatTableModule, MatPaginatorModule, MatButtonModule, MatIconModule, MatProgressBarModule],
   templateUrl: './medico-tabela.html',
   styleUrl: './medico-tabela.css',
 })
 export class MedicoTabela implements OnInit {
   private readonly service = inject(Medicos);
   private readonly dialog = inject(MatDialog);
+  private readonly snackBar = inject(MatSnackBar);
+
 
   // Colunas exibidas pelo mat-table: precisa bater com os matColumnDef do template.
   readonly colunas = ['nome', 'email', 'crm', 'especialidade', 'acoes'];
@@ -28,6 +32,7 @@ export class MedicoTabela implements OnInit {
   readonly pagina = this.tabela.pagina;
   readonly tamanhoPagina = this.tabela.tamanhoPagina;
   readonly erro = this.tabela.erro;
+  readonly carregando = this.tabela.carregando;
 
   ngOnInit(): void {
     this.tabela.buscar();
@@ -38,14 +43,14 @@ export class MedicoTabela implements OnInit {
   }
 
   cadastrar(): void {
-    abrirEAtualizar(this.dialog, MedicoForm, () => this.tabela.buscar());
+    abrirEAtualizar(this.dialog, this.snackBar, MedicoForm, () => this.tabela.buscar(), "Medico cadastrado com sucesso");
   }
 
   editar(id: number): void {
     // Busca o detalhamento completo (a listagem não traz telefone/endereço)
     // antes de abrir o formulário de edição.
     this.service.detalhar(id).subscribe((medico) => {
-      abrirEAtualizar(this.dialog, MedicoForm, () => this.tabela.buscar(), { data: { medico } });
+      abrirEAtualizar(this.dialog, this.snackBar, MedicoForm, () => this.tabela.buscar(), "Medico atualizado com sucesso", { data: { medico } });
     });
   }
 
